@@ -19,6 +19,10 @@ public class HangPerson {
 	boolean gameStatus; // false if user lost the game; true if user won the game
 	private String input;
 
+	/**
+	 * Constructor of HangPerson class
+	 * @param wordsFile Scanner file containing all the words read from the file
+	 */
 	HangPerson(Scanner wordsFile) {
 		int index = 0;
 		wordsList = new String[ARRAYSIZE];
@@ -31,7 +35,9 @@ public class HangPerson {
 		lettersGuessed = new char[LETTERS_GUESSED_SIZE];
 	}
 
-	//Resizes the wordsList array, it happens when the list of words exceeds 100
+	/**
+	 *  Resizes the wordsList array, it happens when the list of words exceeds 100
+	 */
 	private void resizeWordsListArray() {
 		ARRAYSIZE *= 2;
 		String[] tempWordsList = new String[ARRAYSIZE];
@@ -43,6 +49,9 @@ public class HangPerson {
 		wordsList = tempWordsList;
 	}
 
+	/**
+	 * Displays the game intro
+	 */
 	public void displayGameIntro() {
 		System.out.println("Welcome to the hangperson game ...");
 		System.out.println("To play, guess a letter to try to guess the word.");
@@ -54,7 +63,9 @@ public class HangPerson {
 
 	}
 
-
+	/**
+	 * Contains all game logic
+	 */
 	public void play()
 	{
 		initialize();
@@ -65,6 +76,7 @@ public class HangPerson {
 		boolean newLetterFound;
 		boolean previouslyFound;
 
+		// Loop until the user wins or loses
 		while(true) {
 			newLetterFound = false;
 			previouslyFound = false;
@@ -78,23 +90,22 @@ public class HangPerson {
 
 			inputChar = input.toCharArray();
 
-
+			// Loop through all letters in the word
 			for (int i = 0; i < currentWord.length; i++){
 				if (inputChar[0] == currentWord[i]) {
 					if (isLetterGuessed[i]) {
 						previouslyFound = true;
-						continue;
 					}
 					isLetterGuessed[i] = true;
-					newLetterFound = true;
-					correctGuesses++;
-					lettersGuessed[lettersGuessedIndex] = inputChar[0];
-					if (lettersGuessedIndex < lettersGuessed.length - 1) {
-						lettersGuessedIndex++;
+					if (!previouslyFound) {
+						newLetterFound = true;
+						correctGuesses++;
 					}
-					break;
+					else newLetterFound = false;
 				}
 			}
+
+			if (newLetterFound) lettersGuessed[lettersGuessedIndex++] = inputChar[0];
 			if (!newLetterFound) {
 				if(!previouslyFound) {
 					wrongGuesses++;
@@ -140,6 +151,11 @@ public class HangPerson {
 
 	}
 
+	/**
+	 * Validates input
+	 * @param text String entered by the user
+	 * @return true if user entered one letter alphabetic character. False otherwise.
+	 */
 	private boolean validateInput(String text) {
 		String pattern = "^[A-z]+$";
 		if (text.length() > 1) return false;
@@ -147,6 +163,9 @@ public class HangPerson {
 		else return false;
 	}
 
+	/**
+	 * Initializes the game and game internal variables.
+	 */
 	private void initialize() {
 		currentWordIndex++;
 		currentWord = wordsList[currentWordIndex].toCharArray();
@@ -160,10 +179,13 @@ public class HangPerson {
 		}
 	}
 
+	/**
+	 * Displays the status of the game
+	 */
 	private void displayStatus() {
 
 		displayPerson();
-		System.out.print("Letters guessed already =>");
+		System.out.print("Letters guessed already => ");
 		for (int i = 0; i < lettersGuessed.length; i++) {
 			System.out.print(lettersGuessed[i] + " ");
 		}
@@ -181,6 +203,9 @@ public class HangPerson {
 
 	}
 
+	/**
+	 * Displays the hang person
+	 */
 	private void displayPerson() {
 		switch(wrongGuesses) {
 		case 0:
